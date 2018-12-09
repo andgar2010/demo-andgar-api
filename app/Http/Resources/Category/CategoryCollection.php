@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources\Category;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryCollection extends ResourceCollection
+class CategoryCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -14,6 +14,11 @@ class CategoryCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'name'=> $this->name == '' ? 'No hay dato de Categoria' : $this->name ,
+            'href'=>[
+                'restaurants' => route('categories.show', $this->id)
+            ],
+        ];
     }
 }

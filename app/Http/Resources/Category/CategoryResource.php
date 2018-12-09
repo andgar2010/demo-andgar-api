@@ -19,6 +19,9 @@ class CategoryResource extends JsonResource
             'href'=>[
                 'restaurants' => route('restaurants.index', $this->id)
             ],
+            'link'=>[
+                'detalls_restaurants' => 'Link:'.route('categories.index', $this->id)
+            ],
         ];
     }
 }
