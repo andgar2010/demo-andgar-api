@@ -15,7 +15,10 @@ class CategoryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'name'=> $this->name,
+            'name'=> $this->name == '' ? 'No hay dato de Categoria' : $this->name ,
+            'href'=>[
+                'restaurants' => route('restaurants.index', $this->id)
+            ],
         ];
     }
 }
