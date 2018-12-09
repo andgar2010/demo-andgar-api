@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Restaurant\RestaurantResource;
+use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,10 @@ class RestaurantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Category $category)
     {
-       return Restaurant::all();
+       // return $category->restaurants; //All tuples
+       return RestaurantResource::collection($category->restaurants); // Selected tuples from resource
     }
 
     /**
