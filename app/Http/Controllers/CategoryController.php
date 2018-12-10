@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CategoryNotBelongsToUser;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
@@ -49,6 +51,7 @@ class CategoryController extends Controller
     {
         $category = new Category;
         $category->name = $request->name;
+        $category->by_user_id = Auth::id();
         $category->save();
         return response([
             'data'=> new CategoryResource($category)
@@ -87,10 +90,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $this->CategoryUserCheck($category);
+        $category->name = $request->name;
         $category->update($request->all());
         return response([
-            'data'=> new CategoryResource($category)
-        ], Response::HTTP_CREATED);
+            'data' => new CategoryResource($category)
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -101,9 +106,18 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        
+        $this->CategoryUserCheck($category);
         $category->delete();
         return response(null, Response::HTTP_NO_CONTENT);
 
+    }
+
+    public function CategoryUserCheck($category)
+    {
+        if (Auth::id() !== $category->by_user_id) {
+            throw new CategoryNotBelongsToUser;
+        }
     }
 
     public function names()

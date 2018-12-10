@@ -10,7 +10,7 @@ class Category extends Model
 
 	protected $fillable = [
 		'name',
-		// 'by_created_user_id'
+		'by_user_id'
 	];
 
     public function restaurants()

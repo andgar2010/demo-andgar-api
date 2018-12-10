@@ -25,7 +25,7 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name'=>'required|max:255|unique:categories'
-            //'number'=>'required|min2|max:10' // Longitud de caracteres 2 - 10
+            //'by_user_id'=>'required|min2|max:10' // Longitud de caracteres 2 - 10
         ];
     }
 }
