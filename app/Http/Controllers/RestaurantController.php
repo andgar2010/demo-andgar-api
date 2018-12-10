@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RestaurantRequest;
 use App\Http\Resources\Restaurant\RestaurantResource;
 use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestaurantController extends Controller
 {
@@ -36,9 +38,13 @@ class RestaurantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RestaurantRequest $request, Category $category)
     {
-        //
+        $restaurant = new Restaurant($request->all());
+        $category->restaurants()->save($restaurant);
+        return response([
+            'data' => new RestaurantResource($restaurant)
+        ],Response::HTTP_CREATED);
     }
 
     /**
