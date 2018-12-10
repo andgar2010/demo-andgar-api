@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RestaurantRequest;
 use App\Http\Resources\Restaurant\RestaurantResource;
-use App\Models\Category;
 use App\Models\Restaurant;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestaurantController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +24,12 @@ class RestaurantController extends Controller
      */
     public function index(Category $category)
     {
-       // return $category->restaurants; //All tuples
-       return RestaurantResource::collection($category->restaurants); // Selected tuples from resource
+        // return RestaurantResource::collection(Restaurant::all());
+        // return RestaurantResource::collection(Restaurant::paginate(100));
+
+
+        //    return $category->restaurants; //All tuples
+        return RestaurantResource::collection($category->restaurants); // Selected tuples from resource
     }
 
     /**
@@ -53,10 +63,11 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function show(Restaurant $restaurant)
+    public function show(Category $category, Restaurant $restaurant)
     {
         return new RestaurantResource($restaurant);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -76,9 +87,13 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Restaurant $restaurant)
+    public function update(Request $request, Category $category, Restaurant $restaurant)
     {
-        //
+        $restaurant->update($request->all());
+        return response(
+            ['data'=> new RestaurantResource($restaurant)],
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -87,13 +102,20 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Restaurant $restaurant)
+    public function destroy(Category $category, Restaurant $restaurant)
     {
-        //
+        $restaurant->delete();
+        return response(null,Response::HTTP_NO_CONTENT);
     }
 
+
+    /**
+     * Show names
+     */
     public function names()
     {
         return Restaurant::all()->lists('name');
     }
 }
+
+

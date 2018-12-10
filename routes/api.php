@@ -18,19 +18,32 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('categories', 'CategoryController');
+
 Route::group(['prefix'=>'categories'],function(){
         Route::apiResource('/{category}/restaurants','RestaurantController');
 });
 
+Route::apiResource('restaurants', 'RestaurantController');
 
 
-// // V1 API 
+
+
+
+// // V1 API
 // Route::group(['prefix' => 'v1'], function () {
-//     // Route::apiResource('categories', 'CategoryController@getCategory', ['only' => ['index', 'store', 'update', 'destroy', 'show']]);
+
+//     Route::apiResource('categories', 'CategoryController');
+
+//     Route::group(['prefix' => 'categories'], function () {
+//         Route::apiResource('/{category}/restaurants', 'RestaurantController');
+//     });
 
 //     Route::apiResource('restaurants', 'RestaurantController');
+
+
+
 // });
-// // END V1 API 
+// // END V1 API
 
 
 // // V2 API
@@ -44,7 +57,7 @@ Route::group(['prefix'=>'categories'],function(){
 //  Route::group(['prefix'=>'categories'],function(){
 //      Route::apiResource('/{category}/restaurants','RestaurantController');
 //  });
-    
+
 //     // Restaurant
 //     Route::apiResource('restaurants', 'RestaurantController');
 //     Route::apiResource('restaurants/names', 'RestaurantController@names');
